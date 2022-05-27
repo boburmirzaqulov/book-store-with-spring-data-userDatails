@@ -35,11 +35,6 @@ public class UserInfoDTO extends UserDTO implements UserDetails{
         return true;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
     public void setPermissions(Set<UserPermissions> permissions) {
         this.permissions = permissions;
     }

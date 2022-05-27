@@ -17,6 +17,7 @@ public class UserDTO {
     protected BigDecimal account;
     protected String username;
     protected String password;
+    protected boolean enabled;
 
 }
 

@@ -20,6 +20,7 @@ import uz.yt.springdata.mapping.UserMapping;
 import uz.yt.springdata.repository.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -29,10 +30,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JdbcUserDetailsManager userDetailsManager;
+    private final UserDetailsService userDetailsService;
 
     public ResponseEntity<?> register(UserDTO userDTO){
 
-        UserInfoDTO userInfoDTO = new UserDetailsService().loadUserByUsername(userDTO.getUsername());
+        UserInfoDTO userInfoDTO = userDetailsService.loadUserByUsername(userDTO.getUsername());
 
         if (userInfoDTO == null) {
             userInfoDTO = new UserInfoDTO();
@@ -42,10 +44,19 @@ public class UserService {
             userInfoDTO.setAccount(userDTO.getAccount());
             userInfoDTO.setUsername(userDTO.getUsername());
             userInfoDTO.setPassword(userDTO.getPassword());
+            userInfoDTO.setEnabled(true);
+
             userInfoDTO.setPermissions(UserRoles.GUEST.getPermissions()
                     .stream()
-                    .map(sga -> UserPermissions.valueOf(sga.getAuthority()))
-                    .filter(e -> !e.getName().contains("ROLE_"))
+                    .filter(e -> !e.getAuthority().contains("ROLE_"))
+                    .map(sga -> {
+                        try {
+                            return UserPermissions.valueOf(sga.getAuthority());
+                        } catch (Exception e){
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toSet())
             );
             userDetailsManager.createUser(userInfoDTO);

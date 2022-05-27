@@ -3,6 +3,7 @@ package uz.yt.springdata.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,6 +32,7 @@ public class SecurityConfiguration{
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -56,8 +58,10 @@ public class SecurityConfiguration{
     public JdbcUserDetailsManager muhammadali(){
         JdbcUserDetailsManager jdbc = new JdbcUserDetailsManager();
         jdbc.setDataSource(dataSource);
-        jdbc.setCreateUserSql("insert into users(firstname, lastname, phonenumber, account, password, username, phone_number, enabled) " +
-                "values(?,?,?,?,?,?,?,?)");
+        jdbc.setCreateAuthoritySql("insert into authorities (username, authority) values(?, ?)");
+
+        jdbc.setCreateUserSql("insert into users(firstname, lastname,phone_number, account, password, username, enabled) " +
+                "values(?,?,?,?,?,?,?)");
         return jdbc;
     }
 

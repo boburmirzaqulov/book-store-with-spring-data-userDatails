@@ -1,5 +1,8 @@
 package uz.yt.springdata.service;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,11 +20,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private AuthoritiesRepository authoritiesRepository;
+
+    private final UserRepository userRepository;
+
+    private final AuthoritiesRepository authoritiesRepository;
 
     @Override
     public UserInfoDTO loadUserByUsername(String username) throws UsernameNotFoundException {
