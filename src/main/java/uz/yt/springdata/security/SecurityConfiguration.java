@@ -3,25 +3,21 @@ package uz.yt.springdata.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import uz.yt.springdata.service.UserDetailsService;
-
-import javax.sql.DataSource;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration{
-
-    @Autowired
-    private DataSource dataSource;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -45,20 +41,17 @@ public class SecurityConfiguration{
     }
 
     @Autowired
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth
-                .jdbcAuthentication()
-                .dataSource(dataSource);
-        auth.userDetailsService(userDetailsService);
+                .authenticationProvider(provider());
     }
 
     @Bean
-    public JdbcUserDetailsManager muhammadali(){
-        JdbcUserDetailsManager jdbc = new JdbcUserDetailsManager();
-        jdbc.setDataSource(dataSource);
-        jdbc.setCreateUserSql("insert into users(firstname, lastname, phonenumber, account, password, username, phone_number, enabled) " +
-                "values(?,?,?,?,?,?,?,?)");
-        return jdbc;
+    public AuthenticationProvider provider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
     }
 
     //    @Bean

@@ -1,10 +1,8 @@
 package uz.yt.springdata.rest;
 
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.yt.springdata.dao.User;
-import uz.yt.springdata.dto.BookDTO;
 import uz.yt.springdata.dto.ResponseDTO;
 import uz.yt.springdata.dto.UserDTO;
 import uz.yt.springdata.service.UserService;
@@ -21,8 +19,8 @@ public class UserResource {
 
 //    CREATE
     @PostMapping
-    public ResponseEntity<?> addUser(@RequestBody UserDTO userDTO){
-        return userService.register(userDTO);
+    public ResponseDTO<UserDTO> addUser(@RequestBody UserDTO userDTO){
+        return userService.addUser(userDTO);
     }
 
 //    READ

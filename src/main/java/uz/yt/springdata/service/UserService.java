@@ -30,30 +30,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final JdbcUserDetailsManager userDetailsManager;
 
-    public ResponseEntity<?> register(UserDTO userDTO){
-
-        UserInfoDTO userInfoDTO = new UserDetailsService().loadUserByUsername(userDTO.getUsername());
-
-        if (userInfoDTO == null) {
-            userInfoDTO = new UserInfoDTO();
-            userInfoDTO.setFirstName(userDTO.getFirstName());
-            userInfoDTO.setLastName(userDTO.getLastName());
-            userInfoDTO.setPhoneNumber(userDTO.getPhoneNumber());
-            userInfoDTO.setAccount(userDTO.getAccount());
-            userInfoDTO.setUsername(userDTO.getUsername());
-            userInfoDTO.setPassword(userDTO.getPassword());
-            userInfoDTO.setPermissions(UserRoles.GUEST.getPermissions()
-                    .stream()
-                    .map(sga -> UserPermissions.valueOf(sga.getAuthority()))
-                    .filter(e -> !e.getName().contains("ROLE_"))
-                    .collect(Collectors.toSet())
-            );
-            userDetailsManager.createUser(userInfoDTO);
-        return ResponseEntity.ok(userDTO);
-        }
-        return ResponseEntity.status(401).body(String.format("This username: %s is already taken",userDTO.getUsername()));
-    }
-
     public ResponseDTO<UserDTO> addUser(UserDTO userDTO) {
 
         List<ValidatorDTO> errors = Validator.validateUser(userDTO);

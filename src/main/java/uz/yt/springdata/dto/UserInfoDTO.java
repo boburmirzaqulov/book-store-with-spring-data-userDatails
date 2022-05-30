@@ -10,14 +10,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UserInfoDTO extends UserDTO implements UserDetails{
-    private Set<UserPermissions> permissions;
+    private Set<GrantedAuthority> permissions;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return permissions
-                .stream()
-                .map(p -> new SimpleGrantedAuthority(p.getName()))
-                .collect(Collectors.toList());
+        return permissions;
     }
 
     @Override
@@ -40,7 +37,7 @@ public class UserInfoDTO extends UserDTO implements UserDetails{
         return true;
     }
 
-    public void setPermissions(Set<UserPermissions> permissions) {
+    public void setPermissions(Set<GrantedAuthority> permissions) {
         this.permissions = permissions;
     }
 }
