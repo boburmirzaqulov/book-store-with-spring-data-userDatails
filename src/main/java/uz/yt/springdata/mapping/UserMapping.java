@@ -15,7 +15,8 @@ public class UserMapping {
                 userDTO.getPhoneNumber(),
                 userDTO.getAccount(),
                 userDTO.getPassword(),
-                userDTO.getUsername()
+                userDTO.getUsername(),
+                        userDTO.isEnabled()
         );
 
     }
@@ -29,7 +30,8 @@ public class UserMapping {
                         user.getPhoneNumber(),
                         user.getAccount(),
                         user.getUsername(),
-                        user.getPassword()
+                        user.getPassword(),
+                        user.isEnabled()
                 );
     }
 }
